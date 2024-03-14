@@ -1,0 +1,14 @@
+GET http://localhost:3030/getUsers
+
+####
+
+POST http://localhost:3030/createUser
+Content-Type: application/json
+
+{
+    "firstName": "Andrea",
+    "lastName": "Sattin",
+    "email": "miaemail@gmail.com",
+    "birthday": "1983-01-23",
+    "avatar": ""
+}
