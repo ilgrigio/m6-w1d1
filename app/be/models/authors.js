@@ -25,7 +25,7 @@ const authorSchema = new mongoose.Schema(
     avatar: {
       type: String,
       required: false,
-      default: 0,
+      // default: 0,
     },
   },
   { timestamps: true, strict: true }

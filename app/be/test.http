@@ -1,14 +1,14 @@
-GET http://localhost:3030/getUsers
+GET http://localhost:3030/getAuthors
 
 ####
 
-POST http://localhost:3030/createUser
+POST http://localhost:3030/createAuthor
 Content-Type: application/json
 
 {
-    "firstName": "Andrea",
-    "lastName": "Sattin",
+    "firstName": "Mario",
+    "lastName": "Rossi",
     "email": "miaemail@gmail.com",
-    "birthday": "1983-01-23",
+    "birthday": "1990-03-28",
     "avatar": ""
 }

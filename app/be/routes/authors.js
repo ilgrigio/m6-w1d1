@@ -15,11 +15,11 @@ router.get("/getAuthors", async (request, response) => {
   }
 });
 
-router.get("/getAuthors/:id", async (request, response) => {
+router.get("/getAuthor/:id", async (request, response) => {
   const { id } = request.params;
   try {
-    const authors = await AuthorsModel.findById(id); // .find ritorno tutto quello che c'è nella collection 'users'
-    response.status(200).send(authors);
+    const author = await AuthorsModel.findById(id); // .find ritorno tutto quello che c'è nella collection 'users'
+    response.status(200).send(author);
   } catch (error) {
     response.status(500).send({
       statusCode: 500,
