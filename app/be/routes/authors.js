@@ -92,4 +92,27 @@ router.patch("/updateAuthor/:id", async (request, response) => {
   }
 });
 
+// DELETE
+router.delete("/deleteAuthor/:id", async (request, response) => {
+  const { id } = request.params;
+  try {
+    const author = await AuthorsModel.findByIdAndDelete(id);
+    if (!author) {
+      response.status(404).send({
+        statusCode: 404,
+        message: "The requested author doesn't exist",
+      });
+    }
+
+    response.status(200).send({
+      statusCode: 200,
+      message: `Author with id ${id} successfully remove`,
+    });
+  } catch (error) {
+    response.status(500).send({
+      statusCode: 500,
+      message: "Internal server error",
+    });
+  }
+});
 module.exports = router;
