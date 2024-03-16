@@ -115,4 +115,31 @@ router.delete("/deleteAuthor/:id", async (request, response) => {
     });
   }
 });
+
+// GET by Name :query
+router.get("/getAuthors/byName/:query", async (request, response) => {
+  const { query } = request.params;
+
+  try {
+    const author = await AuthorsModel.find({
+      firstName: {
+        $regex: ".*" + query + ".*",
+        $options: "i",
+      },
+    });
+    if (!author) {
+      response.status(404).send({
+        statusCode: 404,
+        message: "Author not found with the given query",
+      });
+    }
+    response.status(200).send(author);
+  } catch (error) {
+    response.status(500).send({
+      statusCode: 500,
+      message: "Internal server error",
+    });
+  }
+});
+
 module.exports = router;

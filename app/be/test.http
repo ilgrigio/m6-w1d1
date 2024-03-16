@@ -6,10 +6,10 @@ POST http://localhost:3030/createAuthor
 Content-Type: application/json
 
 {
-    "firstName": "Giovanni",
-    "lastName": "Verdi",
+    "firstName": "Luisa",
+    "lastName": "Ranieri",
     "email": "miaemail@gmail.com",
-    "birthday": "1968-09-12",
+    "birthday": "1963-12-16",
     "avatar": ""
 }
 
@@ -26,3 +26,6 @@ Content-Type: application/json
 
 ####
 DELETE http://localhost:3030/deleteAuthor/65f3521d8e77449cf7586720
+
+####
+GET http://localhost:3030/getAuthors/byName/lui
