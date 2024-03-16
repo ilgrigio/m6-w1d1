@@ -17,8 +17,16 @@ router.get("/getAuthors", async (request, response) => {
 
 router.get("/getAuthor/:id", async (request, response) => {
   const { id } = request.params;
+
   try {
     const author = await AuthorsModel.findById(id); // .find ritorno tutto quello che c'è nella collection 'users'
+
+    if (!author) {
+      response.status(404).send({
+        statusCode: 404,
+        message: "The requested author doesn't exist",
+      });
+    }
     response.status(200).send(author);
   } catch (error) {
     response.status(500).send({

@@ -12,3 +12,6 @@ Content-Type: application/json
     "birthday": "1990-03-28",
     "avatar": ""
 }
+
+####
+GET http://localhost:3030/getAuthor/65f3521d8e77449cf7586720
