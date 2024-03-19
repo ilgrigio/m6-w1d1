@@ -6,8 +6,8 @@ POST http://localhost:3030/createAuthor
 Content-Type: application/json
 
 {
-    "firstName": "Luisa",
-    "lastName": "Ranieri",
+    "firstName": "autore 20",
+    "lastName": "Pallino",
     "email": "miaemail@gmail.com",
     "birthday": "1963-12-16",
     "avatar": ""
@@ -28,4 +28,30 @@ Content-Type: application/json
 DELETE http://localhost:3030/deleteAuthor/65f3521d8e77449cf7586720
 
 ####
-GET http://localhost:3030/getAuthors/byName/lui
+GET http://localhost:3030/getAuthors/byName/ca
+
+####
+GET http://localhost:3030/getUsers
+
+####
+POST http://localhost:3030/createUser
+Content-Type: application/json
+
+{
+    "userName": "Cippalippa",
+    "password": "77643hello",
+    "email": "cippal@gmail.com",
+    "age": 982,
+    "role": "user"
+}
+####
+POST http://localhost:3030/login
+Content-Type: application/json
+
+{
+    "email": "cippal@gmail.com",
+   "password": "77643hello"
+}
+
+####
+DELETE http://localhost:3030/deleteUser/65f8e0d089a71ce5015a9198

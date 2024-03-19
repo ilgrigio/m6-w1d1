@@ -1,0 +1,10 @@
+POST http://localhost:3030/blogPosts/create
+Content-Type: application/json
+
+{
+    "title":"The Impact of Artificial Intelligence on Modern Businesses",
+    "category":"Technology and Business",
+    "content":"Artificial Intelligence (AI) is revolutionizing the way businesses operate. From automating repetitive tasks to providing valuable insights, AI is helping companies to become more efficient and effective.",
+    "author":"Leo",
+    "readTime":2
+}

@@ -5,9 +5,20 @@ const AuthorsModel = require("../models/authors");
 
 // GET
 router.get("/getAuthors", async (request, response) => {
+  const { page = 1, pageSize = 5 } = request.query;
+
   try {
-    const authors = await AuthorsModel.find(); // .find ritorno tutto quello che c'è nella collection 'users'
-    response.status(200).send(authors);
+    const authors = await AuthorsModel.find() // .find ritorno tutto quello che c'è nella collection 'users'
+      .limit(pageSize)
+      .skip((page - 1) * pageSize)
+      .sort({ firstName: -1 });
+
+    const totalAuthors = await AuthorsModel.countDocuments();
+    response.status(200).send({
+      currentPage: +page,
+      totalPages: Math.ceil(totalAuthors / pageSize),
+      authors,
+    });
   } catch (error) {
     response.status(500).send({
       statusCode: 500,
@@ -44,7 +55,7 @@ router.post("/createAuthor", async (request, response) => {
     firstName: request.body.firstName,
     lastName: request.body.lastName,
     email: request.body.email,
-    birthday: Date(request.body.birthday),
+    birthday: new Date(request.body.birthday),
     avatar: request.body.avatar,
   });
   try {
