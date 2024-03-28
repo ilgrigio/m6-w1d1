@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const cors = require("cors");
 // Richiedere libreria "dotenv"
 require("dotenv").config();
 
@@ -15,7 +15,9 @@ const authorsRoute = require("./routes/authors");
 const blogPostsRoute = require("./routes/blogPosts");
 const usersRoute = require("./routes/users");
 const loginRoute = require("./routes/login");
+
 // middleware (tra una request e response) che permette la lettura dei json
+app.use(cors());
 app.use(express.json());
 app.use("/", authorsRoute);
 app.use("/", blogPostsRoute);

@@ -38,10 +38,10 @@ POST http://localhost:3030/createUser
 Content-Type: application/json
 
 {
-    "userName": "Cippalippa",
-    "password": "77643hello",
-    "email": "cippal@gmail.com",
-    "age": 982,
+    "userName": "gallo",
+    "password": "gallocedrone34",
+    "email": "gallo@gmail.com",
+    "age": 65,
     "role": "user"
 }
 ####
