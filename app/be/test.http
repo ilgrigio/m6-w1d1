@@ -2,15 +2,15 @@ GET http://localhost:3030/getAuthors
 
 ####
 
-POST http://localhost:3030/createAuthor
+POST http://localhost:3030/createAuthor/
 Content-Type: application/json
 
 {
-    "firstName": "autore 20",
-    "lastName": "Pallino",
+    "firstName": "autore 22",
+    "lastName": "Prova2",
     "email": "miaemail@gmail.com",
-    "birthday": "1963-12-16",
-    "avatar": ""
+    "birthday": "1978-12-16",
+    "avatar": "OIP.jpg"
 }
 
 ####
@@ -38,10 +38,10 @@ POST http://localhost:3030/createUser
 Content-Type: application/json
 
 {
-    "userName": "gallo",
-    "password": "gallocedrone34",
-    "email": "gallo@gmail.com",
-    "age": 65,
+    "userName": "piccolo",
+    "password": "diavoletto75",
+    "email": "piccolodiavolo@gmail.com",
+    "age": 55,
     "role": "user"
 }
 ####

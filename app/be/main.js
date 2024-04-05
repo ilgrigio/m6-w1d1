@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 // Richiedere libreria "dotenv"
 require("dotenv").config();
 
@@ -19,6 +20,9 @@ const loginRoute = require("./routes/login");
 // middleware (tra una request e response) che permette la lettura dei json
 app.use(cors());
 app.use(express.json());
+// Dichiaro la rotta per il get delle img su uploads tramite express.static middleware
+app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
+
 app.use("/", authorsRoute);
 app.use("/", blogPostsRoute);
 app.use("/", usersRoute);

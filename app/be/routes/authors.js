@@ -1,10 +1,30 @@
 const express = require("express");
-const router = express.Router();
+const author = express.Router();
 // Prendo dalla cartella models il modello utenti
 const AuthorsModel = require("../models/authors");
+const multer = require("multer");
+
+// Configurazione base diskstorage
+const internalStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    // Creazione suffisso unico per il file
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    console.log(file.originalname);
+    // Recupero dell'estensione originale del file
+    const fileExtension = file.originalname.split(",");
+    // Composizione dell'intero nome del file
+    cb(null, `${file.fieldname}+${uniqueSuffix}.${fileExtension}`);
+  },
+});
+// Dichiariamo cosa usare come storage
+// Middleware da usare nelle rotte
+const upload = multer({ storage: internalStorage });
 
 // GET
-router.get("/getAuthors", async (request, response) => {
+author.get("/getAuthors", async (request, response) => {
   const { page = 1, pageSize = 5 } = request.query;
 
   try {
@@ -28,7 +48,7 @@ router.get("/getAuthors", async (request, response) => {
 });
 
 // GET ID
-router.get("/getAuthor/:id", async (request, response) => {
+author.get("/getAuthor/:id", async (request, response) => {
   const { id } = request.params;
 
   try {
@@ -48,33 +68,48 @@ router.get("/getAuthor/:id", async (request, response) => {
     });
   }
 });
+// POST upload Img
+author.post("/author/uploadImg", upload.single("avatar"), async (req, res) => {
+  const url = req.protocol + "://" + req.get("host"); // https://hostname
+  try {
+    const imgUrl = req.file.filename; // Riceviamo all'interno dell'oggetto file la nostra img (filename)
+    res.status(200).json({ sourceImg: `${url}/uploads/${imgUrl}` });
+  } catch (error) {
+    res.status(500).send({
+      statusCode: 500,
+      message: "File upload error",
+    });
+  }
+});
 
 // POST
-router.post("/createAuthor", async (request, response) => {
+author.post("/createAuthor", async (req, res) => {
   const newAuthor = new AuthorsModel({
-    firstName: request.body.firstName,
-    lastName: request.body.lastName,
-    email: request.body.email,
-    birthday: new Date(request.body.birthday),
-    avatar: request.body.avatar,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    birthday: Date(req.body.birthday),
+    avatar: req.body.avatar,
   });
+  console.log(req.body);
+
   try {
-    // Salvo l'utente
     const authorToSave = await newAuthor.save();
-    response.status(201).send({
+
+    res.status(201).send({
       statusCode: 201,
       payload: authorToSave,
     });
   } catch (error) {
-    response.status(500).send({
+    res.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: "Errore interno server",
     });
   }
 });
 
 // PATCH
-router.patch("/updateAuthor/:id", async (request, response) => {
+author.patch("/updateAuthor/:id", async (request, response) => {
   const { id } = request.params;
 
   try {
@@ -104,7 +139,7 @@ router.patch("/updateAuthor/:id", async (request, response) => {
 });
 
 // DELETE
-router.delete("/deleteAuthor/:id", async (request, response) => {
+author.delete("/deleteAuthor/:id", async (request, response) => {
   const { id } = request.params;
   try {
     const author = await AuthorsModel.findByIdAndDelete(id);
@@ -128,7 +163,7 @@ router.delete("/deleteAuthor/:id", async (request, response) => {
 });
 
 // GET by Name :query
-router.get("/getAuthors/byName/:query", async (request, response) => {
+author.get("/getAuthors/byName/:query", async (request, response) => {
   const { query } = request.params;
 
   try {
@@ -153,4 +188,4 @@ router.get("/getAuthors/byName/:query", async (request, response) => {
   }
 });
 
-module.exports = router;
+module.exports = author;
