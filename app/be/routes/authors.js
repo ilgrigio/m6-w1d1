@@ -1,8 +1,26 @@
 const express = require("express");
 const author = express.Router();
-// Prendo dalla cartella models il modello utenti
+// Prendo dalla cartella models il modello autori
 const AuthorsModel = require("../models/authors");
 const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+require("dotenv").config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const cloudStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "PT043",
+    format: async (req, file) => "png",
+    public_id: (req, file) => file.name,
+  },
+});
 
 // Configurazione base diskstorage
 const internalStorage = multer.diskStorage({
@@ -14,14 +32,50 @@ const internalStorage = multer.diskStorage({
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     console.log(file.originalname);
     // Recupero dell'estensione originale del file
-    const fileExtension = file.originalname.split(",");
+    const fileExtension = file.originalname.split(".").pop();
     // Composizione dell'intero nome del file
-    cb(null, `${file.fieldname}+${uniqueSuffix}.${fileExtension}`);
+    cb(null, `${file.fieldname}-${uniqueSuffix}.${fileExtension}`);
   },
 });
 // Dichiariamo cosa usare come storage
 // Middleware da usare nelle rotte
 const upload = multer({ storage: internalStorage });
+const cloudUpload = multer({ storage: cloudStorage });
+
+// Avatar PATCH
+author.patch(
+  "/author/:id/avatar",
+  cloudUpload.single("avatar"),
+  async (req, res, next) => {
+    try {
+      console.log(req.file);
+      let updated = await AuthorsModel.findByIdAndUpdate(
+        req.params.id,
+        { avatar: req.file.path },
+        { new: true }
+      );
+      res.send(updated);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Cloudinary POST
+author.post(
+  "/author/cloudUploadImg",
+  cloudUpload.single("avatar"),
+  async (req, res) => {
+    try {
+      res.status(200).json({ sourceImg: req.file.path });
+    } catch (error) {
+      res.status(500).send({
+        statusCode: 500,
+        message: "File Upload error",
+      });
+    }
+  }
+);
 
 // GET
 author.get("/getAuthors", async (request, response) => {

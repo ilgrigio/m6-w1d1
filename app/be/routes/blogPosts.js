@@ -99,6 +99,20 @@ blogPosts.patch("/updateBlogPost/:id", async (req, res) => {
   }
 });
 
+// Cover PATCH
+// blogRoute.patch("/:id/cover", cloudinaryUploader, async (req, res, next) => {
+//   try {
+//     let updated = await Blog.findByIdAndUpdate(
+//       req.params.id,
+//       { cover: req.file.path },
+//       { new: true }
+//     );
+//     res.send(updated);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 // DELETE
 blogPosts.delete("/deleteAuthor/:id", async (req, res) => {
   const { id } = req.params;

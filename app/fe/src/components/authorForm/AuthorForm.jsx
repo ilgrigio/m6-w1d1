@@ -28,7 +28,7 @@ const AuthorForm = () => {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_SERVER_BASE_URL}/author/uploadImg`,
+                `${process.env.REACT_APP_SERVER_BASE_URL}/author/cloudUploadImg`,
                 {
                     method: 'POST',
                     body: fileData,
