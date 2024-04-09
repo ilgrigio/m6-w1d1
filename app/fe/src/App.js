@@ -5,7 +5,6 @@ import AuthorForm from './components/authorForm/AuthorForm'
 
 const App = () => {
     return (
-        // <LoginForm />
         <Router>
             <Routes>
                 <Route exact path="/" element={<Login />} />
