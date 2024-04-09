@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react'
 import styles from './spinner.module.css'
+import ClimbingBoxLoader from 'react-spinners/ClimbingBoxLoader'
 
 const LoadingIndicator = () => {
-    return (
-        <div className={`d-flex justify-content-center align-items-center ${styles.spinnerContainer}`}>
-            <div className="spinner-grow text-primary" role="status"></div>
-        </div>
-    );
-};
+    const [loading, setLoading] = useState(false)
 
-export default LoadingIndicator;
+    useEffect(() => {
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+        }, 10000)
+    }, [])
+
+    return (
+        <>
+            <div className={`${styles.spinner}`}>
+                <ClimbingBoxLoader color={'#36d7b7'} size={30} />
+            </div>
+        </>
+    )
+}
+
+export default LoadingIndicator
