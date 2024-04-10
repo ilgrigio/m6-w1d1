@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const BlogPostSchema = new mongoose.Schema(
   {
@@ -14,23 +14,28 @@ const BlogPostSchema = new mongoose.Schema(
     cover: {
       type: String,
       required: false,
-      default: "http://picsum.photos/600/400",
+      default: 'http://picsum.photos/600/400',
     },
     readTime: {
-      type: Number,
-      required: false,
-      //   unit: ``,
+      value: {
+        type: Number,
+        required: false,
+      },
+      unit: {
+        type: String,
+        required: false,
+      },
     },
     author: {
       type: String,
-      // avatar: String,
+      avatar: String,
       required: true,
     },
     content: {
       type: String,
-      required: false,
+      required: true,
     },
   },
   { timestamps: true, strict: true }
 );
-module.exports = mongoose.model("blogPostModel", BlogPostSchema, "blogPost");
+module.exports = mongoose.model('blogPostModel', BlogPostSchema, 'blogPost');
