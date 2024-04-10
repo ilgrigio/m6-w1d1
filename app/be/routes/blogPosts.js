@@ -1,12 +1,14 @@
-const express = require("express");
+const express = require('express');
 const blogPosts = express.Router();
-const BlogPostModel = require("../models/blogPosts");
+const BlogPostModel = require('../models/blogPosts');
+const UserModel = require('../models/users');
 
 // GET
-blogPosts.get("/blogPosts", async (req, res) => {
+blogPosts.get('/blogPosts', async (req, res) => {
   const { page = 1, pageSize = 10 } = req.query;
   try {
     const blogPosts = await BlogPostModel.find()
+      .populate('author')
       .limit(pageSize)
       .skip((page - 1) * pageSize)
       .sort({ author: -1 });
@@ -22,13 +24,13 @@ blogPosts.get("/blogPosts", async (req, res) => {
   } catch (error) {
     res.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });
 
 // GET ID
-blogPosts.get("/getBlogPost/:id", async (req, res) => {
+blogPosts.get('/getBlogPost/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -44,33 +46,44 @@ blogPosts.get("/getBlogPost/:id", async (req, res) => {
   } catch (error) {
     res.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });
 
 // POST
-blogPosts.post("/blogPost/create", async (req, res) => {
+blogPosts.post('/blogPost/create', async (req, res) => {
+  const user = await UserModel.findOne({ _id: req.body.author });
   const newBlogPost = new BlogPostModel({
     title: req.body.title,
     category: req.body.category,
     content: req.body.content,
     cover: req.body.cover,
     readTime: Number(req.body.readTime),
-    author: req.body.author,
+    author: user._id,
   });
 
   try {
-    await newBlogPost.save();
+    const post = await newBlogPost.save();
+    await UserModel.updateOne(
+      { _id: user._id },
+      { $push: { postedPost: post } }
+    );
+
     res.status(201).send({
       statusCode: 201,
-      payload: "post add successfully",
+      payload: 'post add successfully',
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).send({
+      statusCode: 500,
+      message: 'Internal server error',
+    });
+  }
 });
 
 // PATCH
-blogPosts.patch("/updateBlogPost/:id", async (req, res) => {
+blogPosts.patch('/updateBlogPost/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -94,7 +107,7 @@ blogPosts.patch("/updateBlogPost/:id", async (req, res) => {
   } catch (error) {
     res.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });
@@ -114,7 +127,7 @@ blogPosts.patch("/updateBlogPost/:id", async (req, res) => {
 // });
 
 // DELETE
-blogPosts.delete("/deleteAuthor/:id", async (req, res) => {
+blogPosts.delete('/deleteAuthor/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const blogPost = await BlogPostModel.findByIdAndDelete(id);
@@ -132,7 +145,7 @@ blogPosts.delete("/deleteAuthor/:id", async (req, res) => {
   } catch (error) {
     res.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });

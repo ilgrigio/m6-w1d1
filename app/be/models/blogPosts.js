@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const BlogPostSchema = new mongoose.Schema(
   {
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      avatar: String,
+      ref: 'userModel',
+    },
     category: {
       type: String,
       required: true,
@@ -25,11 +30,6 @@ const BlogPostSchema = new mongoose.Schema(
         type: String,
         required: false,
       },
-    },
-    author: {
-      type: String,
-      avatar: String,
-      required: true,
     },
     content: {
       type: String,

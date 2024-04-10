@@ -1,11 +1,11 @@
-const express = require("express");
+const express = require('express');
 const author = express.Router();
 // Prendo dalla cartella models il modello autori
-const AuthorsModel = require("../models/authors");
-const multer = require("multer");
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-require("dotenv").config();
+const AuthorsModel = require('../models/authors');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+require('dotenv').config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -16,8 +16,8 @@ cloudinary.config({
 const cloudStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "PT043",
-    format: async (req, file) => "png",
+    folder: 'PT043',
+    format: async (req, file) => 'png',
     public_id: (req, file) => file.name,
   },
 });
@@ -25,14 +25,14 @@ const cloudStorage = new CloudinaryStorage({
 // Configurazione base diskstorage
 const internalStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads");
+    cb(null, 'uploads');
   },
   filename: (req, file, cb) => {
     // Creazione suffisso unico per il file
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     console.log(file.originalname);
     // Recupero dell'estensione originale del file
-    const fileExtension = file.originalname.split(".").pop();
+    const fileExtension = file.originalname.split('.').pop();
     // Composizione dell'intero nome del file
     cb(null, `${file.fieldname}-${uniqueSuffix}.${fileExtension}`);
   },
@@ -44,8 +44,8 @@ const cloudUpload = multer({ storage: cloudStorage });
 
 // Avatar PATCH
 author.patch(
-  "/author/:id/avatar",
-  cloudUpload.single("avatar"),
+  '/author/:id/avatar',
+  cloudUpload.single('avatar'),
   async (req, res, next) => {
     try {
       console.log(req.file);
@@ -63,22 +63,22 @@ author.patch(
 
 // Cloudinary POST
 author.post(
-  "/author/cloudUploadImg",
-  cloudUpload.single("avatar"),
+  '/author/cloudUploadImg',
+  cloudUpload.single('avatar'),
   async (req, res) => {
     try {
       res.status(200).json({ sourceImg: req.file.path });
     } catch (error) {
       res.status(500).send({
         statusCode: 500,
-        message: "File Upload error",
+        message: 'File Upload error',
       });
     }
   }
 );
 
 // GET
-author.get("/getAuthors", async (request, response) => {
+author.get('/getAuthors', async (request, response) => {
   const { page = 1, pageSize = 5 } = request.query;
 
   try {
@@ -96,13 +96,13 @@ author.get("/getAuthors", async (request, response) => {
   } catch (error) {
     response.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });
 
 // GET ID
-author.get("/getAuthor/:id", async (request, response) => {
+author.get('/getAuthor/:id', async (request, response) => {
   const { id } = request.params;
 
   try {
@@ -118,26 +118,26 @@ author.get("/getAuthor/:id", async (request, response) => {
   } catch (error) {
     response.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });
 // POST upload Img
-author.post("/author/uploadImg", upload.single("avatar"), async (req, res) => {
-  const url = req.protocol + "://" + req.get("host"); // https://hostname
+author.post('/author/uploadImg', upload.single('avatar'), async (req, res) => {
+  const url = req.protocol + '://' + req.get('host'); // https://hostname
   try {
     const imgUrl = req.file.filename; // Riceviamo all'interno dell'oggetto file la nostra img (filename)
     res.status(200).json({ sourceImg: `${url}/uploads/${imgUrl}` });
   } catch (error) {
     res.status(500).send({
       statusCode: 500,
-      message: "File upload error",
+      message: 'File upload error',
     });
   }
 });
 
 // POST
-author.post("/createAuthor", async (req, res) => {
+author.post('/createAuthor', async (req, res) => {
   const newAuthor = new AuthorsModel({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -157,13 +157,13 @@ author.post("/createAuthor", async (req, res) => {
   } catch (error) {
     res.status(500).send({
       statusCode: 500,
-      message: "Errore interno server",
+      message: 'Errore interno server',
     });
   }
 });
 
 // PATCH
-author.patch("/updateAuthor/:id", async (request, response) => {
+author.patch('/updateAuthor/:id', async (request, response) => {
   const { id } = request.params;
 
   try {
@@ -187,13 +187,13 @@ author.patch("/updateAuthor/:id", async (request, response) => {
   } catch (error) {
     response.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });
 
 // DELETE
-author.delete("/deleteAuthor/:id", async (request, response) => {
+author.delete('/deleteAuthor/:id', async (request, response) => {
   const { id } = request.params;
   try {
     const author = await AuthorsModel.findByIdAndDelete(id);
@@ -211,33 +211,33 @@ author.delete("/deleteAuthor/:id", async (request, response) => {
   } catch (error) {
     response.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });
 
 // GET by Name :query
-author.get("/getAuthors/byName/:query", async (request, response) => {
+author.get('/getAuthors/byName/:query', async (request, response) => {
   const { query } = request.params;
 
   try {
     const author = await AuthorsModel.find({
       firstName: {
-        $regex: ".*" + query + ".*",
-        $options: "i",
+        $regex: '.*' + query + '.*',
+        $options: 'i',
       },
     });
     if (!author) {
       response.status(404).send({
         statusCode: 404,
-        message: "Author not found with the given query",
+        message: 'Author not found with the given query',
       });
     }
     response.status(200).send(author);
   } catch (error) {
     response.status(500).send({
       statusCode: 500,
-      message: "Internal server error",
+      message: 'Internal server error',
     });
   }
 });

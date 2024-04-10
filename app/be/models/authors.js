@@ -1,7 +1,7 @@
 // Richiamo libreria mongoose
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-// Creo uno schema Utente
+// Create Author Schema
 const authorSchema = new mongoose.Schema(
   {
     firstName: {
@@ -31,4 +31,4 @@ const authorSchema = new mongoose.Schema(
   { timestamps: true, strict: true }
 );
 
-module.exports = mongoose.model("authorModel", authorSchema, "author");
+module.exports = mongoose.model('authorModel', authorSchema, 'author');
