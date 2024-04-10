@@ -30,21 +30,21 @@ DELETE http://localhost:3030/deleteAuthor/65f3521d8e77449cf7586720
 ####
 GET http://localhost:3030/getAuthors/byName/ca
 
-####
+###
 GET http://localhost:3030/getUsers
 
-####
+###
 POST http://localhost:3030/createUser
 Content-Type: application/json
 
 {
-    "userName": "piccolo",
-    "password": "diavoletto75",
-    "email": "piccolodiavolo@gmail.com",
-    "age": 55,
+    "userName": "Gregorio",
+    "password": "greg65",
+    "email": "greg65@gmail.com",
+    "age": 43,
     "role": "user"
 }
-####
+###
 POST http://localhost:3030/login
 Content-Type: application/json
 
